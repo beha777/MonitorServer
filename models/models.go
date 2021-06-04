@@ -25,10 +25,10 @@ type Service struct {
 }
 
 type ServerInfo struct {
-	ID       uint `gorm:"primaryKey"`
-	Host     string
-	Login    string
-	Password string
-	OS       string
-	Version  string
+	ID       uint   `json:"id":"primaryKey"`
+	Host     string `json:"host"`
+	Login    string `json:"login"`
+	Password string `json:"password"`
+	OS       string `json:"os"`
+	Version  string `json:"version"`
 }

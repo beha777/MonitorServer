@@ -18,7 +18,7 @@ func main() {
 	db.ConnectDatabase()
 	//db.GetDBConn().DropTable(&models.Server{}, &models.ServerInfo{}, &models.Service{})
 	db.GetDBConn().AutoMigrate(&models.Server{}, &models.ServerInfo{}, &models.Service{})
-	routes.Init()
+
 	var centOsServer = models.ServerInfo{
 		Host:     "127.0.0.1:2281",
 		Login:    "root",
@@ -46,6 +46,6 @@ func main() {
 		"Mem_load = %.0f%%\n"+
 		"Disc_load = %.0f%%\n",
 		curCPUload, curMemLoad, curDiscUsed)
-
+	routes.Init()
 	time.Sleep(time.Minute)
 }
