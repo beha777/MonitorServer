@@ -10,7 +10,7 @@ Create "settings-dev.json" with the following format
     "server": "127.0.0.1",
     "port": "5432",
     "user": "postgres",
-    "password": "q1w2r3t4",
+    "password": "admin",
     "database": "beha"
     }
 }
