@@ -6,13 +6,13 @@ Create "settings-dev.json" with the following format
     "portRun": "8001"
   },
 
-  "postgresParams": {
+    "postgresParams": {
     "server": "127.0.0.1",
-    "port": "",
+    "port": "5432",
     "user": "postgres",
-    "password": "",
-    "database": ""
-  }
+    "password": "q1w2r3t4",
+    "database": "beha"
+    }
 }
 
 ROUTES

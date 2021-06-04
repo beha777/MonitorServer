@@ -48,5 +48,4 @@ func main() {
 		curCPUload, curMemLoad, curDiscUsed)
 
 	time.Sleep(time.Minute)
-
 }
