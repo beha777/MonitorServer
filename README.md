@@ -14,3 +14,15 @@ Create "settings-dev.json" with the following format
     "database": ""
   }
 }
+
+ROUTES
+
+router.POST("/addserver", addServer)
+body:
+{
+    Host:     "127.0.0.1:2281",
+    Login:    "root",
+    Password: "password",
+    OS:       "CentOS",
+    Version:  "7.0",
+}

@@ -40,7 +40,7 @@ func CheckServersStart() {
 	}
 }
 
-func CheckPingAndTelnet () {
+func CheckPingAndTelnet() {
 	timer := time.NewTicker(time.Second * 10)
 	defer timer.Stop()
 
@@ -84,8 +84,6 @@ func CheckTelnet() {
 		}
 	}
 }
-
-
 
 func CheckServers() {
 	var servers []models.Server

@@ -44,13 +44,14 @@ func GetDBConn() *gorm.DB {
 	return database
 }
 
-func AddServer(NewServer models.ServerInfo) {
+func AddServer(NewServer models.ServerInfo) bool {
 	if database.Find(&models.ServerInfo{}, "host = ? and login = ?", NewServer.Host, NewServer.Login).Error == nil {
 		log.Println("SERVER exists")
-		return
+		return false
 	}
 	NewServer.Password = Cipher.Encode(NewServer.Password)
 	database.Create(&NewServer)
+	return true
 }
 
 func AddServices(serviceList []string, serverId uint) {

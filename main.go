@@ -4,6 +4,7 @@ import (
 	"MonitorServer/db"
 	"MonitorServer/jobs"
 	"MonitorServer/models"
+	"MonitorServer/routes"
 	"MonitorServer/server"
 	"MonitorServer/settings"
 	"log"
@@ -17,7 +18,7 @@ func main() {
 	db.ConnectDatabase()
 	//db.GetDBConn().DropTable(&models.Server{}, &models.ServerInfo{}, &models.Service{})
 	db.GetDBConn().AutoMigrate(&models.Server{}, &models.ServerInfo{}, &models.Service{})
-
+	routes.Init()
 	var centOsServer = models.ServerInfo{
 		Host:     "127.0.0.1:2281",
 		Login:    "root",
