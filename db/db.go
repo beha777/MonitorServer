@@ -21,16 +21,16 @@ func initDB() *gorm.DB {
 		settingParams.Server, settingParams.Port,
 		settingParams.User, settingParams.DataBase,
 		settingParams.Password)
-	db, err := gorm.Open("postgres", connString)
+	dbase, err := gorm.Open("postgres", connString)
 
 	if err != nil {
 		message := "❌ Can't connect database server: " + settingParams.Server + "\nDatabase: " + settingParams.DataBase
 		TGbot.SendMessageToTelegramBot(message)
 		log.Fatal("Couldn't connect to postgresql database", err.Error(), settingParams.Server)
 	}
-	db.LogMode(true)
-	db.SingularTable(true)
-	return db
+	dbase.LogMode(true)
+	dbase.SingularTable(true)
+	return dbase
 }
 
 func ConnectDatabase() {
@@ -51,16 +51,18 @@ func AddServer(NewServer models.ServerInfo) bool {
 	return true
 }
 
+var nilTime = time.Unix(1, 0)
+
 func AddServices(serviceList []string, serverId uint) {
 	for _, serviceName := range serviceList {
 		newService := models.Service{
 			ServerID:           serverId,
 			Name:               strings.Split(strings.TrimSpace(serviceName), " ")[0],
 			State:              "active",
-			LastTime:           time.Time{},
-			CheckPeriod:        3,
-			LastNotified:       time.Time{},
-			NotificationPeriod: 3600,
+			LastTime:           nilTime,
+			CheckPeriod:        uint(settings.AppSettings.PeriodParams.DefaultCheck),
+			LastNotified:       nilTime,
+			NotificationPeriod: uint(settings.AppSettings.PeriodParams.DefaultNotification),
 		}
 		if newService.Name == "UNIT" || database.Find(&models.Service{}, "Name = ?", newService.Name).Error == nil {
 			continue

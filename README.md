@@ -18,6 +18,11 @@ Create "settings-dev.json" with the following format
             "token": "1857766717:AAGOdDVdYgYbj9yFBa5imAc9sUZR1Y7ZfL8",
             "chat_id": "@ServerParamStatus"
         }
+        "periods": {
+        "default_notification": 3600,
+        "default_ticker": 60,
+        "default_check": 30
+        }
     }
 
 

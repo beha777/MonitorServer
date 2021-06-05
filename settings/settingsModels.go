@@ -4,6 +4,7 @@ type Settings struct {
 	AppParams      Params           `json:"app"`
 	PostgresParams PostgresSettings `json:"postgresParams"`
 	BotParams      BotSettings      `json:"botParams"`
+	PeriodParams   Periods          `json:"periods"`
 }
 
 type Params struct {
@@ -22,4 +23,10 @@ type PostgresSettings struct {
 type BotSettings struct {
 	Token  string `json:"token"`
 	ChatID string `json:"chat_id"`
+}
+
+type Periods struct {
+	DefaultNotification int `json:"default_notification"`
+	DefaultTicker       int `json:"default_ticker"`
+	DefaultCheck        int `json:"default_check"`
 }

@@ -16,7 +16,7 @@ func main() {
 	settings.AppSettings = settings.ReadSettings()
 	server.ConnectServer()
 	db.ConnectDatabase()
-	//db.GetDBConn().DropTable(&models.Server{}, &models.ServerInfo{}, &models.Service{})
+	db.GetDBConn().DropTable(&models.Service{})
 	db.GetDBConn().AutoMigrate(&models.Server{}, &models.ServerInfo{}, &models.Service{})
 
 	var centOsServer = models.ServerInfo{

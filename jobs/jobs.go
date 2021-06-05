@@ -5,6 +5,7 @@ import (
 	"MonitorServer/db"
 	"MonitorServer/models"
 	"MonitorServer/server"
+	"MonitorServer/settings"
 	"github.com/reiver/go-telnet"
 	"log"
 	"os/exec"
@@ -13,8 +14,10 @@ import (
 	"time"
 )
 
+var nilTime = time.Unix(1, 0)
+
 func CheckServicesStart() {
-	timer := time.NewTicker(time.Second * 10)
+	timer := time.NewTicker(time.Second * time.Duration(settings.AppSettings.PeriodParams.DefaultTicker))
 	defer timer.Stop()
 
 	log.Println("CheckServicesStartED")
@@ -27,7 +30,7 @@ func CheckServicesStart() {
 }
 
 func CheckServersStart() {
-	timer := time.NewTicker(time.Second * 10)
+	timer := time.NewTicker(time.Second * time.Duration(settings.AppSettings.PeriodParams.DefaultTicker))
 	defer timer.Stop()
 
 	log.Println("CheckServersStartED")
@@ -41,7 +44,7 @@ func CheckServersStart() {
 }
 
 func CheckPingAndTelnet() {
-	timer := time.NewTicker(time.Second * 10)
+	timer := time.NewTicker(time.Second * time.Duration(settings.AppSettings.PeriodParams.DefaultTicker))
 	defer timer.Stop()
 
 	log.Println("CheckPingAndTelnetED")
@@ -110,10 +113,9 @@ func CheckServerStatus(curServer models.Server) {
 	if curServer.LastNotified.Add(time.Second * time.Duration(curServer.NotificationPeriod)).Before(time.Now()) {
 		curServer.LastNotified = time.Now()
 		if (curServer.Condition == ">" && curParam > curServer.Limit) || (curServer.Condition == "<" && curParam < curServer.Limit) {
-			message := "❌ ServerID:" + strconv.Itoa(int(curServer.ServerID)) + "\nParam:" + curServer.Param + curServer.Condition + strconv.Itoa(int(curServer.Limit))
-			TGbot.SendMessageToTelegramBot(message)
-		} else {
-			message := "✅ ServerID:" + strconv.Itoa(int(curServer.ServerID)) + "\nParam:" + curServer.Param + curServer.Condition + strconv.Itoa(int(curServer.Limit))
+			curServer.LastNotified = time.Now()
+			message := "❌ ServerID:" + strconv.Itoa(int(curServer.ServerID)) +
+				"\nParam:" + curServer.Param + curServer.Condition + strconv.Itoa(int(curServer.Limit))
 			TGbot.SendMessageToTelegramBot(message)
 		}
 	}
@@ -133,19 +135,18 @@ func CheckServices() {
 func CheckServiceStatus(serviceName models.Service) {
 	curServerCon := server.ConnectToServer(serviceName.ServerID)
 	execResult, err := curServerCon.Exec("systemctl is-active " + serviceName.Name)
-	execResultString := string(execResult)
+	execResultString := strings.TrimSpace(string(execResult))
 	serviceName.LastTime = time.Now()
 
 	if err != nil && !strings.Contains(execResultString, "active") {
 		log.Println("EXEC_CheckServiceStatus error-", err, execResultString)
 	}
 	if serviceName.LastNotified.Add(time.Second * time.Duration(serviceName.NotificationPeriod)).Before(time.Now()) {
-		serviceName.LastNotified = time.Now()
 		if execResultString != serviceName.State {
-			message := "❌ ServerID:" + strconv.Itoa(int(serviceName.ServerID)) + "\nService: " + serviceName.Name + "\nStatus is " + execResultString
-			TGbot.SendMessageToTelegramBot(message)
-		} else {
-			message := "✅ ServerID:" + strconv.Itoa(int(serviceName.ServerID)) + "\nService: " + serviceName.Name + "\nStatus is " + execResultString
+			message := "❌ ServerID:" + strconv.Itoa(int(serviceName.ServerID)) +
+				"\nService: " + serviceName.Name +
+				"\nStatus is " + execResultString
+			serviceName.LastNotified = time.Now()
 			TGbot.SendMessageToTelegramBot(message)
 		}
 	}

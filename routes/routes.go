@@ -1,8 +1,8 @@
 package routes
 
 import (
+	"MonitorServer/settings"
 	"github.com/gin-gonic/gin"
-	"testNEW/settings"
 )
 
 func Init() {
