@@ -2,13 +2,13 @@ package db
 
 import (
 	"MonitorServer/Cipher"
+	"MonitorServer/TGbot"
 	"MonitorServer/models"
 	"MonitorServer/settings"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"log"
-	"net/http"
 	"strings"
 	"time"
 )
@@ -24,12 +24,9 @@ func initDB() *gorm.DB {
 	db, err := gorm.Open("postgres", connString)
 
 	if err != nil {
-		_, err := http.Get("https://api.telegram.org/bot1857766717:AAGOdDVdYgYbj9yFBa5imAc9sUZR1Y7ZfL8/sendMessage?chat_id=@ServerParamStatus&text=%E2%9D%8C" + "%20Cant%20connect%20server%3A%20" + settingParams.Server + "%3A" + settingParams.DataBase)
-		if err != nil {
-			log.Println("GET_DBconnect error", err)
-		}
+		message := "❌ Can't connect database server: " + settingParams.Server + "\nDatabase: " + settingParams.DataBase
+		TGbot.SendMessageToTelegramBot(message)
 		log.Fatal("Couldn't connect to postgresql database", err.Error(), settingParams.Server)
-		//logger.Error.Println()
 	}
 	db.LogMode(true)
 	db.SingularTable(true)

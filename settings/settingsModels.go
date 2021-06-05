@@ -3,7 +3,7 @@ package settings
 type Settings struct {
 	AppParams      Params           `json:"app"`
 	PostgresParams PostgresSettings `json:"postgresParams"`
-	AESkey         []byte           `json:"aeskey"`
+	BotParams      BotSettings      `json:"botParams"`
 }
 
 type Params struct {
@@ -17,4 +17,9 @@ type PostgresSettings struct {
 	Server   string `json:"server"`
 	Port     string `json:"port"`
 	DataBase string `json:"database"`
+}
+
+type BotSettings struct {
+	Token  string `json:"token"`
+	ChatID string `json:"chat_id"`
 }

@@ -1,11 +1,12 @@
 package server
 
 import (
+	"MonitorServer/Cipher"
+	"MonitorServer/TGbot"
 	"MonitorServer/db"
 	"MonitorServer/models"
 	"github.com/sfreiberg/simplessh"
 	"log"
-	"net/http"
 )
 
 var centosServer *simplessh.Client
@@ -13,6 +14,8 @@ var centosServer *simplessh.Client
 func InitServer() *simplessh.Client {
 	server, err := simplessh.ConnectWithPassword("127.0.0.1:2281", "root", "q1w2r3t4")
 	if err != nil {
+		message := "❌ Can't connect server: 127.0.0.1:2281\nUsername: root"
+		TGbot.SendMessageToTelegramBot(message)
 		log.Println("CONNECT error", err)
 	}
 	//defer centosServer.Close()
@@ -22,13 +25,10 @@ func InitServer() *simplessh.Client {
 func ConnectToServer(serverID uint) *simplessh.Client {
 	var curServer models.ServerInfo
 	db.GetDBConn().Find(&curServer, serverID)
-
-	server, err := simplessh.ConnectWithPassword(curServer.Host, curServer.Login, "q1w2r3t4")
+	server, err := simplessh.ConnectWithPassword(curServer.Host, curServer.Login, Cipher.Decode(curServer.Password))
 	if err != nil {
-		_, err := http.Get("https://api.telegram.org/bot1857766717:AAGOdDVdYgYbj9yFBa5imAc9sUZR1Y7ZfL8/sendMessage?chat_id=@ServerParamStatus&text=%E2%9D%8C" + "%20Cant%20connect%20server%3A%20" + curServer.Host + "%3A" + curServer.Login)
-		if err != nil {
-			log.Println("GET_connect error", err)
-		}
+		message := "❌ Can't connect server: " + curServer.Host + "\nUsername: " + curServer.Login
+		TGbot.SendMessageToTelegramBot(message)
 		log.Println("CONNECT_error", err)
 	}
 	return server

@@ -1,12 +1,12 @@
 package jobs
 
 import (
+	"MonitorServer/TGbot"
 	"MonitorServer/db"
 	"MonitorServer/models"
 	"MonitorServer/server"
 	"github.com/reiver/go-telnet"
 	"log"
-	"net/http"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -60,11 +60,8 @@ func CheckPing() {
 	for _, curServer := range servers {
 		out, err := exec.Command("ping", strings.Split(curServer.Host, ":")[0]).Output()
 		if err != nil && !strings.Contains(string(out), "Lost = 0") {
-			_, err := http.Get("https://api.telegram.org/bot1857766717:AAGOdDVdYgYbj9yFBa5imAc9sUZR1Y7ZfL8/sendMessage?chat_id=@ServerParamStatus&text=%E2%9D%8C" + "%20Cant%20ping%3A%20" + strings.Split(curServer.Host, ":")[0])
-			if err != nil {
-				log.Println("GET_ping error", err)
-			}
-
+			message := "❌ Can't ping: " + strings.Split(curServer.Host, ":")[0]
+			TGbot.SendMessageToTelegramBot(message)
 			log.Println("PING error", err)
 		}
 	}
@@ -76,10 +73,8 @@ func CheckTelnet() {
 	for _, curServer := range servers {
 		_, err := telnet.DialTo(curServer.Host)
 		if err != nil {
-			_, err := http.Get("https://api.telegram.org/bot1857766717:AAGOdDVdYgYbj9yFBa5imAc9sUZR1Y7ZfL8/sendMessage?chat_id=@ServerParamStatus&text=%E2%9D%8C" + "%20Cant%20telnet%20port%3A%20" + strings.Split(curServer.Host, ":")[1])
-			if err != nil {
-				log.Println("GET_telnet error", err)
-			}
+			message := "❌ Can't telnet port: " + strings.Split(curServer.Host, ":")[1]
+			TGbot.SendMessageToTelegramBot(message)
 			log.Println("TELNET error", err)
 		}
 	}
@@ -108,24 +103,18 @@ func CheckServerStatus(curServer models.Server) {
 	}
 	log.Println("curParam ---", curParam)
 	if curParam == -1 {
-		_, err := http.Get("https://api.telegram.org/bot1857766717:AAGOdDVdYgYbj9yFBa5imAc9sUZR1Y7ZfL8/sendMessage?chat_id=@ServerParamStatus&text=%E2%9D%8C" + "%20Cant%20parse%20" + curServer.Param)
-		if err != nil {
-			log.Println("GET_", curServer.Param, " parse error", err)
-		}
+		message := "❌ Can't parse " + curServer.Param
+		TGbot.SendMessageToTelegramBot(message)
 	}
 	curServer.LastTime = time.Now()
 	if curServer.LastNotified.Add(time.Second * time.Duration(curServer.NotificationPeriod)).Before(time.Now()) {
 		curServer.LastNotified = time.Now()
 		if (curServer.Condition == ">" && curParam > curServer.Limit) || (curServer.Condition == "<" && curParam < curServer.Limit) {
-			_, err := http.Get("https://api.telegram.org/bot1857766717:AAGOdDVdYgYbj9yFBa5imAc9sUZR1Y7ZfL8/sendMessage?chat_id=@ServerParamStatus&text=%E2%9D%8C" + "%20ServerID%3A" + strconv.Itoa(int(curServer.ServerID)) + "%3A" + curServer.Param + curServer.Condition + strconv.Itoa(int(curServer.Limit)))
-			if err != nil {
-				log.Println("GET_1 error", err)
-			}
+			message := "❌ ServerID:" + strconv.Itoa(int(curServer.ServerID)) + "\nParam:" + curServer.Param + curServer.Condition + strconv.Itoa(int(curServer.Limit))
+			TGbot.SendMessageToTelegramBot(message)
 		} else {
-			_, err := http.Get("https://api.telegram.org/bot1857766717:AAGOdDVdYgYbj9yFBa5imAc9sUZR1Y7ZfL8/sendMessage?chat_id=@ServerParamStatus&text=%E2%9C%94%EF%B8%8F" + "%20ServerID%3A" + strconv.Itoa(int(curServer.ServerID)) + "%3A" + curServer.Param + curServer.Condition + strconv.Itoa(int(curServer.Limit)))
-			if err != nil {
-				log.Println("GET_2 error", err)
-			}
+			message := "✅ ServerID:" + strconv.Itoa(int(curServer.ServerID)) + "\nParam:" + curServer.Param + curServer.Condition + strconv.Itoa(int(curServer.Limit))
+			TGbot.SendMessageToTelegramBot(message)
 		}
 	}
 	db.GetDBConn().Save(&curServer)
@@ -153,15 +142,11 @@ func CheckServiceStatus(serviceName models.Service) {
 	if serviceName.LastNotified.Add(time.Second * time.Duration(serviceName.NotificationPeriod)).Before(time.Now()) {
 		serviceName.LastNotified = time.Now()
 		if execResultString != serviceName.State {
-			_, err := http.Get("https://api.telegram.org/bot1857766717:AAGOdDVdYgYbj9yFBa5imAc9sUZR1Y7ZfL8/sendMessage?chat_id=@ServerParamStatus&text=%E2%9D%8C" + "%20ServerID%3A" + strconv.Itoa(int(serviceName.ServerID)) + "%3A" + serviceName.Name + "%20Status%20is%20" + execResultString)
-			if err != nil {
-				log.Println("GET_3 error", err)
-			}
+			message := "❌ ServerID:" + strconv.Itoa(int(serviceName.ServerID)) + "\nService: " + serviceName.Name + "\nStatus is " + execResultString
+			TGbot.SendMessageToTelegramBot(message)
 		} else {
-			_, err := http.Get("https://api.telegram.org/bot1857766717:AAGOdDVdYgYbj9yFBa5imAc9sUZR1Y7ZfL8/sendMessage?chat_id=@ServerParamStatus&text=%E2%9C%94%EF%B8%8F" + "%20ServerID%3A" + strconv.Itoa(int(serviceName.ServerID)) + "%3A" + serviceName.Name + "%20Status%20is%20" + execResultString)
-			if err != nil {
-				log.Println("GET_4 error", err)
-			}
+			message := "✅ ServerID:" + strconv.Itoa(int(serviceName.ServerID)) + "\nService: " + serviceName.Name + "\nStatus is " + execResultString
+			TGbot.SendMessageToTelegramBot(message)
 		}
 	}
 	db.GetDBConn().Save(&serviceName)
