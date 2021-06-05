@@ -19,9 +19,9 @@ Create "settings-dev.json" with the following format
             "chat_id": "@ServerParamStatus"
         }
         "periods": {
-        "default_notification": 3600,
-        "default_ticker": 60,
-        "default_check": 30
+            "default_notification": 3600,
+            "default_ticker": 60,
+            "default_check": 30
         }
     }
 
