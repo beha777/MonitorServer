@@ -14,6 +14,10 @@ Create "settings-dev.json" with the following format
             "password": "admin",
             "database": "beha"
         },
+        "botParams": {
+            "token": "1857766717:AAGOdDVdYgYbj9yFBa5imAc9sUZR1Y7ZfL8",
+            "chat_id": "@ServerParamStatus"
+        }
     }
 
 
