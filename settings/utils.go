@@ -6,14 +6,10 @@ import (
 	"log"
 )
 
-var (
-	// AppSettings app settings
-	AppSettings Settings
-)
+var AppSettings Settings
 
 // ReadSettings to init app settings
 func ReadSettings() Settings {
-
 	var appParams Settings
 	doc, err := ioutil.ReadFile("./settings-dev.json")
 	if err != nil {
