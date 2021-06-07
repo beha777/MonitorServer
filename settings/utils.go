@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"time"
 )
 
 var AppSettings Settings
@@ -21,5 +22,6 @@ func ReadSettings() Settings {
 		log.Println(err)
 		panic(err.Error())
 	}
+	appParams.PeriodParams.NilTime = time.Unix(1, 0)
 	return appParams
 }

@@ -14,7 +14,6 @@ import (
 	"time"
 )
 
-var nilTime = time.Unix(1, 0)
 
 func CheckServicesStart() {
 	timer := time.NewTicker(time.Second * time.Duration(settings.AppSettings.PeriodParams.DefaultTicker))

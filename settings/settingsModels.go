@@ -1,5 +1,7 @@
 package settings
 
+import "time"
+
 type Settings struct {
 	AppParams      Params           `json:"app"`
 	PostgresParams PostgresSettings `json:"postgresParams"`
@@ -29,4 +31,5 @@ type Periods struct {
 	DefaultNotification int `json:"default_notification"`
 	DefaultTicker       int `json:"default_ticker"`
 	DefaultCheck        int `json:"default_check"`
+	NilTime 		time.Time `json:"nil_time"`
 }
