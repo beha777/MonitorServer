@@ -1,0 +1,27 @@
+{
+  "app": {
+    "serverName": "test",
+    "portRun": "8001"
+  },
+
+  "postgresParams": {
+    "server": "127.0.0.1",
+    "port": "5432",
+    "user": "postgres",
+    "password": "admin",
+    "database": "beha"
+  },
+  "botParams": {
+    "url" : "192.168.150.67:8088/SendMsgToBot/",
+    "login": "srv",
+    "password": "srv2021",
+    "urlId": "3",
+    "token": "1857766717:AAGOdDVdYgYbj9yFBa5imAc9sUZR1Y7ZfL8",
+    "chat_id": "@ServerParamStatus"
+  },
+  "periods": {
+    "default_notification": 3600,
+    "default_ticker": 60,
+    "default_check": 30
+  }
+}

@@ -23,13 +23,17 @@ type PostgresSettings struct {
 }
 
 type BotSettings struct {
-	Token  string `json:"token"`
-	ChatID string `json:"chat_id"`
+	Url      string `json:"url"`
+	Login    string `json:"login"`
+	Password string `json:"password"`
+	UrlID    string `json:"urlId"`
+	Token    string `json:"token"`
+	ChatID   string `json:"chat_id"`
 }
 
 type Periods struct {
-	DefaultNotification int `json:"default_notification"`
-	DefaultTicker       int `json:"default_ticker"`
-	DefaultCheck        int `json:"default_check"`
-	NilTime 		time.Time `json:"nil_time"`
+	DefaultNotification int       `json:"default_notification"`
+	DefaultTicker       int       `json:"default_ticker"`
+	DefaultCheck        int       `json:"default_check"`
+	NilTime             time.Time `json:"nil_time"`
 }

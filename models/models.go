@@ -25,7 +25,7 @@ type Service struct {
 }
 
 type ServerInfo struct {
-	ID       uint   `json:"id":"primaryKey"`
+	ID       uint   `json:"id"`
 	Host     string `json:"host"`
 	Login    string `json:"login"`
 	Password string `json:"password"`

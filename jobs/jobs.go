@@ -14,7 +14,6 @@ import (
 	"time"
 )
 
-
 func CheckServicesStart() {
 	timer := time.NewTicker(time.Second * time.Duration(settings.AppSettings.PeriodParams.DefaultTicker))
 	defer timer.Stop()

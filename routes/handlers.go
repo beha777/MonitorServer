@@ -10,7 +10,7 @@ import (
 
 func addServer(context *gin.Context) {
 	var server models.ServerInfo
-	err := json.NewDecoder(context.Request.Body).Decode(server)
+	err := json.NewDecoder(context.Request.Body).Decode(&server)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
 			"response": err.Error(),
