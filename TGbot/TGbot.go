@@ -10,7 +10,6 @@ import (
 )
 
 func SendMessageToTelegramBot(message string) {
-	//newline := "%0A"
 	url4tb := settings.AppSettings.BotParams.Url
 
 	req, err := http.NewRequest("GET", url4tb, nil)

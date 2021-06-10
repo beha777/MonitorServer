@@ -12,7 +12,7 @@ import (
 var centosServer *simplessh.Client
 
 func InitServer() *simplessh.Client {
-	server, err := simplessh.ConnectWithPassword("127.0.0.1:2281", "root", "q1w2r3t4")
+	server, err := simplessh.ConnectWithPassword("127.0.0.1:2281", "root", "q1")
 	if err != nil {
 		message := "❌ Can't connect server: 127.0.0.1:2281\nUsername: root"
 		TGbot.SendMessageToTelegramBot(message)
@@ -27,7 +27,8 @@ func ConnectToServer(serverID uint) *simplessh.Client {
 	db.GetDBConn().Find(&curServer, serverID)
 	server, err := simplessh.ConnectWithPassword(curServer.Host, curServer.Login, Cipher.Decode(curServer.Password))
 	if err != nil {
-		message := "❌ Can't connect server: " + curServer.Host + "\nUsername: " + curServer.Login
+		message := "❌ Can't connect server: " + curServer.Host + "\nUsername: " + curServer.Login +
+			"\n" + curServer.Owners
 		TGbot.SendMessageToTelegramBot(message)
 		log.Println("CONNECT_error", err)
 	}

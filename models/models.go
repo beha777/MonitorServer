@@ -22,6 +22,8 @@ type Service struct {
 	CheckPeriod        uint
 	LastNotified       time.Time
 	NotificationPeriod uint
+	Owners             string
+	IsActive           bool
 }
 
 type ServerInfo struct {
@@ -31,4 +33,6 @@ type ServerInfo struct {
 	Password string `json:"password"`
 	OS       string `json:"os"`
 	Version  string `json:"version"`
+	Owners   string `json:"owners"`
+	IsActive bool   `json:"is_active"`
 }

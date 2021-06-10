@@ -32,8 +32,8 @@ type BotSettings struct {
 }
 
 type Periods struct {
-	DefaultNotification int       `json:"default_notification"`
-	DefaultTicker       int       `json:"default_ticker"`
-	DefaultCheck        int       `json:"default_check"`
+	DefaultNotification uint      `json:"default_notification"`
+	DefaultTicker       uint      `json:"default_ticker"`
+	DefaultCheck        uint      `json:"default_check"`
 	NilTime             time.Time `json:"nil_time"`
 }
