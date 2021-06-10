@@ -10,8 +10,13 @@ type Settings struct {
 }
 
 type Params struct {
-	ServerName string `json:"serverName"`
-	PortRun    string `json:"portRun"`
+	ServerName    string `json:"serverName"`
+	PortRun       string `json:"portRun"`
+	LogFile       string `json:"logFile"`
+	LogMaxSize    int    `json:"logMaxSize"`
+	LogMaxBackups int    `json:"logMaxBackups"`
+	LogMaxAge     int    `json:"logMaxAge"`
+	LogCompress   bool   `json:"logCompress"`
 }
 
 type PostgresSettings struct {

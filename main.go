@@ -6,11 +6,14 @@ import (
 	"MonitorServer/models"
 	"MonitorServer/routes"
 	"MonitorServer/settings"
+	"gopkg.in/natefinch/lumberjack.v2"
+	"log"
 	"time"
 )
 
 func main() {
 	settings.AppSettings = settings.ReadSettings()
+	logSettings()
 
 	db.ConnectDatabase()
 	//db.GetDBConn().DropTable(&models.Service{})
@@ -32,4 +35,15 @@ func main() {
 	go jobs.CheckServersStart()
 	routes.Init()
 	time.Sleep(time.Minute)
+}
+
+func logSettings() {
+	log.SetOutput(&lumberjack.Logger{
+		Filename:   settings.AppSettings.AppParams.LogFile,
+		MaxSize:    settings.AppSettings.AppParams.LogMaxSize, // megabytes
+		MaxBackups: settings.AppSettings.AppParams.LogMaxBackups,
+		MaxAge:     settings.AppSettings.AppParams.LogMaxAge,   //days
+		Compress:   settings.AppSettings.AppParams.LogCompress, // disabled by default
+		LocalTime:  true,
+	})
 }
