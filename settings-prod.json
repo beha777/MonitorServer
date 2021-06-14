@@ -1,7 +1,12 @@
 {
   "app": {
     "serverName": "test",
-    "portRun": "8001"
+    "portRun": "8001",
+    "logFile": "./logs/info.log",
+    "logMaxSize"    : 10,
+    "logMaxBackups" : 100,
+    "logMaxAge"     : 365,
+    "logCompress"   : true
   },
 
   "postgresParams": {

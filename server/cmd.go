@@ -11,13 +11,16 @@ import (
 func GetCPUload(centosServer *simplessh.Client) float64 {
 	execResult, err := centosServer.Exec("top -bn 1 | fgrep 'load'")
 	execResultString := string(execResult)
+	execResultString = strings.Split(execResultString, "average: ")[1]
+	log.Println("CPU_execResultString =", execResultString)
 	if err != nil {
 		log.Println("EXEC_GetCPUload error", err)
 	} else {
 		log.Println(execResultString)
 		re := regexp.MustCompile(`[-]?\d+[.,]?\d*`)
 		parsedValues := re.FindAllString(execResultString, -1)
-		curCPUload, err := strconv.ParseFloat(strings.Replace(parsedValues[6], ",", ".", -1), 64)
+		curCPUload, err := strconv.ParseFloat(strings.Replace(parsedValues[1], ",", ".", -1), 64)
+		log.Println("curCPUload =", curCPUload)
 		if err != nil {
 			log.Println("CPU_CONV error", err)
 		} else {

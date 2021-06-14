@@ -1,4 +1,9 @@
 .idea
 settings-dev.json
+<<<<<<< HEAD
 go.mod
 go.sum
+=======
+MonitorServer
+*.exe
+>>>>>>> 59dbf6a47169f75921e19be2229a8d0ad46611e6

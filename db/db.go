@@ -28,7 +28,7 @@ func initDB() *gorm.DB {
 		TGbot.SendMessageToTelegramBot(message)
 		log.Fatal("Couldn't connect to postgresql database", err.Error(), settingParams.Server)
 	}
-	dbase.LogMode(true)
+	dbase.LogMode(false)
 	dbase.SingularTable(true)
 	return dbase
 }

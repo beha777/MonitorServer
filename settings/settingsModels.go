@@ -10,8 +10,13 @@ type Settings struct {
 }
 
 type Params struct {
-	ServerName string `json:"serverName"`
-	PortRun    string `json:"portRun"`
+	ServerName    string `json:"serverName"`
+	PortRun       string `json:"portRun"`
+	LogFile       string `json:"logFile"`
+	LogMaxSize    int    `json:"logMaxSize"`
+	LogMaxBackups int    `json:"logMaxBackups"`
+	LogMaxAge     int    `json:"logMaxAge"`
+	LogCompress   bool   `json:"logCompress"`
 }
 
 type PostgresSettings struct {
@@ -36,4 +41,5 @@ type Periods struct {
 	DefaultTicker       uint      `json:"default_ticker"`
 	DefaultCheck        uint      `json:"default_check"`
 	NilTime             time.Time `json:"nil_time"`
+	UpdateServerConfig uint `json:"update_server_config"`
 }
