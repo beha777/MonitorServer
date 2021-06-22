@@ -12,6 +12,7 @@ type Server struct {
 	CheckPeriod        uint
 	LastNotified       time.Time
 	NotificationPeriod uint
+	IsActive           bool
 }
 type Service struct {
 	ID                 uint `gorm:"primaryKey"`
@@ -22,17 +23,20 @@ type Service struct {
 	CheckPeriod        uint
 	LastNotified       time.Time
 	NotificationPeriod uint
-	Owners             string
 	IsActive           bool
 }
 
 type ServerInfo struct {
-	ID       uint   `json:"id"`
-	Host     string `json:"host"`
-	Login    string `json:"login"`
-	Password string `json:"password"`
-	OS       string `json:"os"`
-	Version  string `json:"version"`
-	Owners   string `json:"owners"`
-	IsActive bool   `json:"is_active"`
+	ID         uint    `json:"id"`
+	Host       string  `json:"host"`
+	Version    float64 `json:"version"`
+	Owners     string  `json:"owners"`
+	IsActive   bool    `json:"is_active"`
+	TgUrl      string  `json:"tg_url"`
+	TgLogin    string  `json:"tg_login"`
+	TgPassword string  `json:"tg_password"`
+	TgUrlId    string  `json:"tg_url_id"`
+	TgBotToken string  `json:"tg_bot_token"`
+	TgChatId   string  `json:"tg_chat_id"`
+	Log        bool    `json:"log"`
 }

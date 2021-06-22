@@ -41,5 +41,5 @@ type Periods struct {
 	DefaultTicker       uint      `json:"default_ticker"`
 	DefaultCheck        uint      `json:"default_check"`
 	NilTime             time.Time `json:"nil_time"`
-	UpdateServerConfig uint `json:"update_server_config"`
+	UpdateClientConfig  uint      `json:"update_client_config"`
 }

@@ -1,7 +1,6 @@
 package db
 
 import (
-	"MonitorServer/Cipher"
 	"MonitorServer/TGbot"
 	"MonitorServer/models"
 	"MonitorServer/settings"
@@ -41,16 +40,6 @@ func GetDBConn() *gorm.DB {
 	return database
 }
 
-func AddServer(NewServer models.ServerInfo) bool {
-	if database.Find(&models.ServerInfo{}, "host = ? and login = ?", NewServer.Host, NewServer.Login).Error == nil {
-		log.Println("SERVER exists")
-		return false
-	}
-	NewServer.Password = Cipher.Encode(NewServer.Password)
-	database.Create(&NewServer)
-	return true
-}
-
 var nilTime = time.Unix(1, 0)
 
 func AddServices(serviceList []string, serverId uint) {
@@ -60,9 +49,9 @@ func AddServices(serviceList []string, serverId uint) {
 			Name:               strings.Split(strings.TrimSpace(serviceName), " ")[0],
 			State:              "active",
 			LastTime:           nilTime,
-			CheckPeriod:        uint(settings.AppSettings.PeriodParams.DefaultCheck),
+			CheckPeriod:        settings.AppSettings.PeriodParams.DefaultCheck,
 			LastNotified:       nilTime,
-			NotificationPeriod: uint(settings.AppSettings.PeriodParams.DefaultNotification),
+			NotificationPeriod: settings.AppSettings.PeriodParams.DefaultNotification,
 		}
 		if newService.Name == "UNIT" || database.Find(&models.Service{}, "Name = ?", newService.Name).Error == nil {
 			continue
@@ -72,4 +61,13 @@ func AddServices(serviceList []string, serverId uint) {
 		}
 		database.Create(&newService)
 	}
+}
+
+func AddServer(NewServer models.ServerInfo) bool {
+	if database.Find(&models.ServerInfo{}, "host = ?", NewServer.Host).Error == nil {
+		log.Println("SERVER exists")
+		return false
+	}
+	database.Create(&NewServer)
+	return true
 }

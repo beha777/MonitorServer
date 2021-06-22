@@ -13,26 +13,15 @@ import (
 
 func main() {
 	settings.AppSettings = settings.ReadSettings()
-	logSettings()
+	//logSettings()
 
 	db.ConnectDatabase()
-	//db.GetDBConn().DropTable(&models.Service{})
+	//db.GetDBConn().DropTable(&models.Server{}, &models.ServerInfo{}, &models.Service{})
 	db.GetDBConn().AutoMigrate(&models.Server{}, &models.ServerInfo{}, &models.Service{})
-	db.GetDBConn().Table("server").Updates(&models.Server{
-		LastTime:           settings.AppSettings.PeriodParams.NilTime,
-		LastNotified:       settings.AppSettings.PeriodParams.NilTime,
-		NotificationPeriod: settings.AppSettings.PeriodParams.DefaultNotification,
-		CheckPeriod:        settings.AppSettings.PeriodParams.DefaultCheck,
-	})
-	db.GetDBConn().Table("service").Updates(&models.Service{
-		LastTime:           settings.AppSettings.PeriodParams.NilTime,
-		LastNotified:       settings.AppSettings.PeriodParams.NilTime,
-		NotificationPeriod: settings.AppSettings.PeriodParams.DefaultNotification,
-		CheckPeriod:        settings.AppSettings.PeriodParams.DefaultCheck,
-	})
 
+	go jobs.UpdateClientConfigStart()
 	go jobs.CheckServicesStart()
-	go jobs.CheckServersStart()
+	go jobs.CheckServerParamsStart()
 	routes.Init()
 	time.Sleep(time.Minute)
 }

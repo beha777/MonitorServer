@@ -1,21 +1,54 @@
 package server
 
 import (
-	"github.com/sfreiberg/simplessh"
+	"MonitorServer/TGbot"
+	"MonitorServer/client"
+	"encoding/json"
+	"io"
 	"log"
+	"net/http"
+	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-func GetCPUload(centosServer *simplessh.Client) float64 {
-	execResult, err := centosServer.Exec("top -bn 1 | fgrep 'load'")
-	execResultString := string(execResult)
-	execResultString = strings.Split(execResultString, "average: ")[1]
-	log.Println("CPU_execResultString =", execResultString)
+func GetJson(url string) []byte {
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	log.Println(url)
+	if err != nil {
+		message := "❌ Server doens't respond: " +
+			"\n" + err.Error()
+		TGbot.SendMessageToTelegramBot(message)
+		log.Println("resp_DO_err", err)
+		return []byte{}
+	}
+	b, err := io.ReadAll(resp.Body)
+	if err != nil {
+		message := "❌ Server doens't respond: " +
+			"\n" + err.Error()
+		TGbot.SendMessageToTelegramBot(message)
+		log.Fatalln("resp_ReadAll_err", err)
+		return []byte{}
+	}
+	defer resp.Body.Close()
+	return b
+}
+
+func GetCPUload(host string) float64 {
+	var sendCommand client.SendCommandResponse
+	url := "http://" + host + "/sendCommand?text=" + url.QueryEscape("top -bn 1 | fgrep 'load'")
+	err := json.Unmarshal(GetJson(url), &sendCommand)
 	if err != nil {
 		log.Println("EXEC_GetCPUload error", err)
 	} else {
+		execResultString := strings.Split(sendCommand.Response, "average: ")[1]
+		log.Println("CPU_execResultString =", execResultString)
 		log.Println(execResultString)
 		re := regexp.MustCompile(`[-]?\d+[.,]?\d*`)
 		parsedValues := re.FindAllString(execResultString, -1)
@@ -31,12 +64,14 @@ func GetCPUload(centosServer *simplessh.Client) float64 {
 	return -1
 }
 
-func GetMemLoad(centosServer *simplessh.Client) float64 {
-	execResult, err := centosServer.Exec("top -bn 1 | fgrep 'Mem :'")
-	execResultString := string(execResult)
+func GetMemLoad(host string) float64 {
+	var sendCommand client.SendCommandResponse
+	url := "http://" + host + "/sendCommand?text=" + url.QueryEscape("top -bn 1 | fgrep 'Mem :'")
+	err := json.Unmarshal(GetJson(url), &sendCommand)
 	if err != nil {
 		log.Println("EXEC_GetMemLoad error", err)
 	} else {
+		execResultString := sendCommand.Response
 		log.Println(execResultString)
 		re := regexp.MustCompile(`[-]?\d+[.,]?\d*`)
 		parsedValues := re.FindAllString(execResultString, -1)
@@ -55,12 +90,14 @@ func GetMemLoad(centosServer *simplessh.Client) float64 {
 	}
 	return -1
 }
-func GetDiscUsage(centosServer *simplessh.Client) float64 {
-	execResult, err := centosServer.Exec("df -h /")
-	execResultString := string(execResult)
+func GetDiscUsage(host string) float64 {
+	var sendCommand client.SendCommandResponse
+	url := "http://" + host + "/sendCommand?text=" + url.QueryEscape("df -h /")
+	err := json.Unmarshal(GetJson(url), &sendCommand)
 	if err != nil {
 		log.Println("EXEC_GetDiscUsage error", err)
 	} else {
+		execResultString := sendCommand.Response
 		log.Println(execResultString)
 		re := regexp.MustCompile(`[-]?\d+[.,]?\d*`)
 		parsedValues := re.FindAllString(execResultString, -1)
@@ -73,20 +110,4 @@ func GetDiscUsage(centosServer *simplessh.Client) float64 {
 		}
 	}
 	return -1
-}
-
-func GetServicesList(centosServer *simplessh.Client) []string {
-	execResult, err := centosServer.Exec("systemctl list-units --type=service --all")
-	execResultString := string(execResult)
-	var execResultStringTrimmed []string
-	if err != nil {
-		log.Println("EXEC_GetServicesList error", err)
-	} else {
-		execResultString = regexp.MustCompile(`[ ●]+`).ReplaceAllString(execResultString, " ")
-		execResultStringTrimmed = strings.Split(execResultString, "\n")
-		log.Println(execResultStringTrimmed[1])
-		log.Println(strings.Split(strings.TrimSpace(execResultStringTrimmed[2]), " ")[1])
-
-	}
-	return execResultStringTrimmed
 }

@@ -1,10 +1,7 @@
 package server
 
 import (
-	"MonitorServer/Cipher"
 	"MonitorServer/TGbot"
-	"MonitorServer/db"
-	"MonitorServer/models"
 	"github.com/sfreiberg/simplessh"
 	"log"
 )
@@ -22,6 +19,7 @@ func InitServer() *simplessh.Client {
 	return server
 }
 
+/*
 func ConnectToServer(serverID uint) *simplessh.Client {
 	var curServer models.ServerInfo
 	db.GetDBConn().Find(&curServer, serverID)
@@ -33,7 +31,7 @@ func ConnectToServer(serverID uint) *simplessh.Client {
 		log.Println("CONNECT_error", err)
 	}
 	return server
-}
+}*/
 
 func ConnectServer() {
 	centosServer = InitServer()
